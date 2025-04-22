@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        {% if error %}
+            <div class="error-message">
+                <h2>Error</h2>
+                <p>{{ error }}</p>
+                <a href="{{ url_for('index') }}" class="submit-btn">Try Again</a>
+            </div>
+        {% else %}
+            <div class="result-message">
+                <h2>Predicted Price: ${{ predicted_price }}</h2>
+                <p>Based on your property details, our model predicts this would be a fair price.</p>
+                
+                <div class="input-summary">
+                    <h3>Your Input:</h3>
+                    <ul>
+                        <li><strong>Neighborhood:</strong> {{ input_data.neighbourhood_cleansed }}</li>
+                        <li><strong>Room Type:</strong> {{ input_data.room_type }}</li>
+                        <li><strong>Accommodates:</strong> {{ input_data.accommodates }}</li>
+                        <li><strong>Bedrooms:</strong> {{ input_data.bedrooms }}</li>
+                        <li><strong>Bathrooms:</strong> {{ input_data.bathrooms }}</li>
+                    </ul>
+                </div>
+                
+                <a href="{{ url_for('index') }}" class="submit-btn">Make Another Prediction</a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airbnb Price Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Airbnb Price Prediction</h1>
+        <p>Fill in the details of your property to get a price estimate</p>
+        
+        <form id="predictionForm" method="POST" action="/predict">
+            <div class="form-section">
+                <h2>Basic Information</h2>
+                
+                <div class="form-group">
+                    <label for="neighbourhood_cleansed">Neighborhood:</label>
+                    <select id="neighbourhood_cleansed" name="neighbourhood_cleansed" required>
+                        <option value="">Select a neighborhood</option>
+                        <option value="Manhattan">Manhattan</option>
+                        <option value="Brooklyn">Brooklyn</option>
+                        <option value="Queens">Queens</option>
+                        <option value="Bronx">Bronx</option>
+                        <option value="Staten Island">Staten Island</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="room_type">Room Type:</label>
+                    <select id="room_type" name="room_type" required>
+                        <option value="">Select room type</option>
+                        <option value="Entire home/apt">Entire home/apartment</option>
+                        <option value="Private room">Private room</option>
+                        <option value="Shared room">Shared room</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="property_type">Property Type:</label>
+                    <select id="property_type" name="property_type">
+                        <option value="Apartment">Apartment</option>
+                        <option value="House">House</option>
+                        <option value="Condominium">Condominium</option>
+                        <option value="Loft">Loft</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Property Details</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="accommodates">Accommodates:</label>
+                        <input type="number" id="accommodates" name="accommodates" min="1" max="16" value="2" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bedrooms">Bedrooms:</label>
+                        <input type="number" id="bedrooms" name="bedrooms" min="0" max="10" value="1">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bathrooms">Bathrooms:</label>
+                        <input type="number" id="bathrooms" name="bathrooms" min="0" max="10" step="0.5" value="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="beds">Beds:</label>
+                        <input type="number" id="beds" name="beds" min="1" max="16" value="1">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Location</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="latitude">Latitude:</label>
+                        <input type="number" id="latitude" name="latitude" step="0.000001" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="longitude">Longitude:</label>
+                        <input type="number" id="longitude" name="longitude" step="0.000001" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <button type="button" id="getLocation">Use My Current Location</button>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Amenities</h2>
+                <div class="amenities-grid">
+                    <div class="amenity-item">
+                        <input type="checkbox" id="wifi" name="amenity" value="Wifi">
+                        <label for="wifi">Wifi</label>
+                    </div>
+                    <div class="amenity-item">
+                        <input type="checkbox" id="kitchen" name="amenity" value="Kitchen">
+                        <label for="kitchen">Kitchen</label>
+                    </div>
+                    <div class="amenity-item">
+                        <input type="checkbox" id="washer" name="amenity" value="Washer">
+                        <label for="washer">Washer</label>
+                    </div>
+                    <div class="amenity-item">
+                        <input type="checkbox" id="tv" name="amenity" value="TV">
+                        <label for="tv">TV</label>
+                    </div>
+                    <div class="amenity-item">
+                        <input type="checkbox" id="ac" name="amenity" value="Air conditioning">
+                        <label for="ac">Air Conditioning</label>
+                    </div>
+                    <div class="amenity-item">
+                        <input type="checkbox" id="heating" name="amenity" value="Heating">
+                        <label for="heating">Heating</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Host & Reviews</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="host_experience_years">Host Experience (years):</label>
+                        <input type="number" id="host_experience_years" name="host_experience_years" min="0" max="50" step="0.5" value="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="number_of_reviews">Number of Reviews:</label>
+                        <input type="number" id="number_of_reviews" name="number_of_reviews" min="0" value="0">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="review_scores_rating">Average Review Score (0-100):</label>
+                    <input type="number" id="review_scores_rating" name="review_scores_rating" min="0" max="100" value="90">
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Availability</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="minimum_nights">Minimum Nights:</label>
+                        <input type="number" id="minimum_nights" name="minimum_nights" min="1" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="maximum_nights">Maximum Nights:</label>
+                        <input type="number" id="maximum_nights" name="maximum_nights" min="1" required>
+                    </div>
+                    
+
+                    
+                    <div class="form-group">
+                        <label for="availability_30">Availability (next 30 days):</label>
+                        <input type="number" id="availability_30" name="availability_30" min="0" max="30" value="10">
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">Predict Price</button>
+        </form>
+        
+        <div id="predictionResult" class="result-container hidden">
+            <h2>Predicted Price: <span id="predictedPrice"></span></h2>
+            <p>Based on your property details, our model predicts this would be a fair price.</p>
+            <button id="resetForm" class="submit-btn">Make Another Prediction</button>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('getLocation').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById('latitude').value = position.coords.latitude;
+                    document.getElementById('longitude').value = position.coords.longitude;
+                }, function(error) {
+                    alert('Error getting location: ' + error.message);
+                });
+            } else {
+                alert('Geolocation is not supported by your browser');
+            }
+        });
+        
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect amenities
+            const amenities = Array.from(document.querySelectorAll('input[name="amenity"]:checked'))
+                                .map(el => el.value);
+            
+            // Collect all form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            data.amenities = amenities;
+            
+            // Send to server
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('predictedPrice').textContent = '$' + data.predicted_price;
+                    document.getElementById('predictionForm').classList.add('hidden');
+                    document.getElementById('predictionResult').classList.remove('hidden');
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('Error: ' + error.message);
+            });
+        });
+        
+        document.getElementById('resetForm').addEventListener('click', function() {
+            document.getElementById('predictionForm').reset();
+            document.getElementById('predictionForm').classList.remove('hidden');
+            document.getElementById('predictionResult').classList.add('hidden');
+        });
+    </script>
+</body>
+</html>
